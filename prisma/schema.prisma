@@ -10,9 +10,51 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Todo {
-  id        String   @id @default(uuid())
+model Account {
+  id        Int @id @default(autoincrement())
+  username  String @unique
+  password  String // Note, this must be hashed for one way encryption!
+  // An account can have many teams
+  teams     Team[]
+}
+
+model Player {
+  id        Int @id @default(autoincrement())
   createdAt DateTime @default(now())
-  text      String
-  completed Boolean
+  firstName String
+  lastName  String
+  team      Team  @relation(fields: [teamId], references: [id])
+  teamId    Int
+  preferences Position[] // This is a list of positions the player prefers
+  eligible  Boolean @default(true) // This is in case a player cannot make it or is injured
+  gender    Gender
+}
+
+model Team {
+  id        Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+  players   Player[]
+
+  // A team is owned by an account
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int   
+}
+
+enum Position {
+  LEFT_FIELD
+  RIGHT_FIELD
+  LEFT_CENTER_FIELD
+  RIGHT_CENTER_FIELD
+  FIRST_BASE
+  SECOND_BASE
+  SHORT_STOP
+  THIRD_BASE
+  PITCHER
+  CATCHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
