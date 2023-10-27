@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
 import cors  from "cors";
 
 import accounts from './routing/accounts';
-
-
-const prisma = new PrismaClient();
+import teams from './routing/teams';
+import players from './routing/players';
 
 const app = express().disable("x-powered-by");
 const port = process.env.PORT || 3000;
@@ -19,7 +17,9 @@ app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
 
-app.use('/', accounts);
+app.use('/v1', accounts);
+app.use('/v1', teams);
+app.use('/v1', players);
 
 
 app.listen(Number(port), () => {

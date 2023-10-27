@@ -19,15 +19,15 @@ model Account {
 }
 
 model Player {
-  id        Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  firstName String
-  lastName  String
-  team      Team  @relation(fields: [teamId], references: [id])
-  teamId    Int
+  id          Int @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  firstName   String
+  lastName    String
+  team        Team  @relation(fields: [teamId], references: [id])
+  teamId      Int
   preferences Position[] // This is a list of positions the player prefers
-  eligible  Boolean @default(true) // This is in case a player cannot make it or is injured
-  gender    Gender
+  eligible    Boolean @default(true) // This is in case a player cannot make it or is injured
+  gender      Gender
 }
 
 model Team {

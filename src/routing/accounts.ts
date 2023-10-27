@@ -7,7 +7,7 @@ import * as crypto from 'crypto';
 const router: Router = express.Router();
 const prisma = new PrismaClient();
 
-router.post('/account/create', async (req: Request, res: Response) => {
+router.post('/account', async (req: Request, res: Response) => {
     // Create account
     try {
         if (req.body.username && req.body.password) {
@@ -76,15 +76,6 @@ router.get('/login', async (req: Request, res: Response) => {
         } else {
             res.status(400).send("This API requires: username, password (hashed)");
         }
-    } catch (e: any) {
-        generateException(res, e);
-    }
-});
-
-router.get('/accounts', async (req: Request, res: Response) => {
-    try {
-        const accounts = await prisma.account.findMany();
-        res.json(accounts);
     } catch (e: any) {
         generateException(res, e);
     }
