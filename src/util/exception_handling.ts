@@ -17,6 +17,6 @@ export function randomHash(minLength = 10, acc = ''): string {
  */
 export function generateException(res: Response, e: any): void {
     const hash = randomHash();
-    console.log(e, hash);
-    res.status(500).send("An error has occurred. Contact the Kickball team: " + hash);
+    console.log(hash, e);
+    res.status(500).send(`An error has occurred. Contact the Kickball team: ${hash}`);
 }
