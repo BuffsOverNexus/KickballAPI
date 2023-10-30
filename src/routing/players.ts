@@ -1,41 +1,42 @@
 import { PrismaClient, Gender, Position } from "@prisma/client";
 import express, { Request, Response, Router } from "express";
 import { generateException } from "../util/exception_handling";
-import isEmpty from "../util/array_util";
 
 const router: Router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/player", async (req: Request, res: Response) => {
     try {
-        if (req.body.firstName && req.body.lastName && req.body.teamId && 
-            req.body.gender) {
-            const firstName = String(req.body.firstName);
-            const lastName = String(req.body.lastName);
-            const teamId = Number(req.body.teamId);
-            const preferences = req.body.preferences as Position[] ?? [];
-            const gender = req.body.gender as Gender ?? Gender.MALE;
-            
-            const player = await prisma.player.create({
-                data: {
-                    firstName,
-                    lastName, 
-                    teamId,
-                    preferences,
-                    gender,
-                }
-            });
-
-            if (player) {
-                console.log(`POST /player ${player}`);
-                res.json(player);
-            } else {
-                console.log(`The data was not created for: ${firstName}, ${lastName}, ${teamId}, ${preferences}, ${gender}`);
-                res.status(400).send(`The data was not created for: ${firstName}, ${lastName}`);
-            }
-        } else {
+        if ( !(req.body.firstName && req.body.lastName && req.body.teamId && req.body.gender) ) {
             res.send("This API requires: firstName, lastName, teamId. Optionally: preferences (Positions), gender (default as MALE)");
+            return;
         }
+
+        const firstName = String(req.body.firstName);
+        const lastName = String(req.body.lastName);
+        const teamId = Number(req.body.teamId);
+        const preferences = req.body.preferences as Position[] ?? [];
+        const gender = req.body.gender as Gender ?? Gender.MALE;
+        
+        const player = await prisma.player.create({
+            data: {
+                firstName,
+                lastName, 
+                teamId,
+                preferences,
+                gender,
+            }
+        });
+
+        if (!player) {
+            console.log(`The data was not created for: ${firstName}, ${lastName}, ${teamId}, ${preferences}, ${gender}`);
+            res.status(400).send(`The data was not created for: ${firstName}, ${lastName}`);
+            return;
+        }
+
+        console.log(`POST /player ${player}`);
+        res.json(player);
+        
     } catch (e: any) {
         generateException(res, e);
     }

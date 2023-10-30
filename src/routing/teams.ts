@@ -110,4 +110,35 @@ router.get("/roster", async (req: Request, res: Response) => {
     }
 });
 
+router.delete("/team", async (req: Request, res: Response) => {
+    try {
+        if (!req.query.id) {
+            res.status(400).send("This API requires: id");
+            return;
+        }
+
+        const id = Number(req.query.id);
+        const team = await prisma.team.findUnique({
+            where: {
+                id
+            }
+        });
+
+        if (!team) {
+            res.status(400).send(`The team with id, ${id}, does not exist.`);
+            return;
+        }
+
+        await prisma.team.delete({
+            where: {
+                id
+            }
+        });
+
+        res.json(team);
+    } catch (e: any) {
+        generateException(res, e);
+    }
+});
+
 export default router;
