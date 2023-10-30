@@ -118,7 +118,6 @@ router.delete("/team", async (req: Request, res: Response) => {
         }
 
         const id = Number(req.query.id);
-
         const team = await prisma.team.findUnique({
             where: {
                 id
