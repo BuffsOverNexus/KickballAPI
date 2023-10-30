@@ -113,7 +113,7 @@ router.get("/roster", async (req: Request, res: Response) => {
 router.delete("/team", async (req: Request, res: Response) => {
     try {
         if (!req.query.id) {
-            res.status(400).send("This API requires: id");
+            res.status(400).send("This API requires: id (team id)");
             return;
         }
 
@@ -125,7 +125,7 @@ router.delete("/team", async (req: Request, res: Response) => {
         });
 
         if (!team) {
-            res.status(400).send(`The team with id, ${id}, does not exist.`);
+            res.status(400).send(`The team with id, ${id}, was not found.`);
             return;
         }
 
